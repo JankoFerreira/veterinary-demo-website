@@ -4604,3 +4604,428 @@ body.configurator-open{
   --blade-duration: 34s;
 }
 
+
+/* =================================================================
+   MOBILE RESPONSIVE STABILIZATION
+   Final overrides so narrow screens are intentionally designed, not
+   just squeezed versions of the desktop composition.
+================================================================= */
+@media (max-width: 760px){
+  :root{
+    --header-h: 68px;
+    --section-angle: 0px;
+  }
+
+  html,
+  body{
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body{
+    font-size: 15px;
+  }
+
+  .container,
+  .site-header .container.header-inner,
+  .hero .container.hero-inner,
+  .configurator .container,
+  .gallery-strip .container{
+    width: 100%;
+    max-width: 100%;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  section,
+  .services,
+  .gallery-strip,
+  .about,
+  .contact,
+  .configurator,
+  .configurator + .contact{
+    margin-top: 0;
+    padding-top: 64px;
+    padding-bottom: 64px;
+    clip-path: none;
+  }
+
+  .site-header{
+    height: var(--header-h);
+  }
+
+  .header-inner{
+    gap: 14px;
+  }
+
+  .logo{
+    min-width: 0;
+    max-width: calc(100vw - 88px);
+    font-size: 15px;
+    line-height: 1.1;
+    letter-spacing: 0.06em;
+    white-space: normal;
+  }
+
+  .logo span{
+    display: block;
+  }
+
+  .nav-toggle{
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+  }
+
+  .main-nav{
+    top: var(--header-h);
+    padding: 18px;
+    background: rgba(255, 253, 250, 0.98);
+  }
+
+  .hero{
+    min-height: auto;
+    height: auto;
+    padding-top: calc(var(--header-h) + 30px);
+    padding-bottom: 54px;
+  }
+
+  .hero .container.hero-inner{
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .hero-copy{
+    max-width: 100%;
+    margin-top: 0;
+  }
+
+  .eyebrow{
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    margin-bottom: 10px;
+  }
+
+  .hero-heading{
+    max-width: 100%;
+    font-size: clamp(40px, 15vw, 62px);
+    line-height: 0.98;
+    letter-spacing: 0;
+    margin-bottom: 18px;
+  }
+
+  .hero-word-rotator{
+    min-height: 1.08em;
+  }
+
+  .hero-word,
+  .hero-word--long{
+    font-size: inherit;
+    letter-spacing: 0;
+    white-space: normal;
+  }
+
+  .hero-text{
+    max-width: 100%;
+    font-size: 15px;
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+
+  .hero-actions{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .hero-actions .btn,
+  .btn{
+    width: 100%;
+    min-height: 48px;
+    padding: 13px 16px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .hero-roller-wall{
+    width: calc(100vw - 18px);
+    max-width: none;
+    margin-left: 0;
+    margin-right: -18px;
+    padding: 0 18px 8px 0;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(218px, 76vw);
+    grid-template-columns: none;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .roller-panel,
+  .roller-panel--offset,
+  .roller-panel--tall{
+    min-height: 230px;
+    height: 230px;
+    max-height: 230px;
+    margin: 0;
+    overflow: hidden;
+    scroll-snap-align: start;
+    box-shadow: 0 18px 34px -28px rgba(43, 38, 32, 0.55);
+  }
+
+  .roller-blade-track{
+    animation: none;
+    gap: 0;
+    height: 100%;
+    min-height: 100%;
+  }
+
+  .roller-blade-track img,
+  .roller-blade-track img.tile-sm,
+  .roller-blade-track img.tile-md,
+  .roller-blade-track img.tile-lg{
+    height: 230px;
+    min-height: 230px;
+    border-radius: 2px;
+  }
+
+  .roller-panel span{
+    left: 10px;
+    right: auto;
+    bottom: 10px;
+    padding: 7px 9px;
+    font-size: 9px;
+  }
+
+  .section-heading,
+  .section-heading.center{
+    max-width: 100%;
+    font-size: clamp(30px, 10vw, 42px);
+    line-height: 1.04;
+    text-align: left;
+  }
+
+  .eyebrow.center{
+    text-align: left;
+  }
+
+  .services-grid,
+  .gallery-grid,
+  .about-inner,
+  .contact-inner,
+  .configurator-shell,
+  .configurator-controls,
+  .measurement-grid,
+  .lead-form-fields,
+  .quote-lead-form{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .service-card{
+    min-height: auto;
+  }
+
+  .service-media{
+    height: 190px;
+  }
+
+  .service-icon{
+    margin: 22px 22px 14px;
+  }
+
+  .service-card h3{
+    margin-left: 22px;
+    margin-right: 22px;
+    font-size: 25px;
+  }
+
+  .service-card p{
+    margin-left: 22px;
+    margin-right: 22px;
+    margin-bottom: 26px;
+  }
+
+  .gallery-grid{
+    grid-auto-rows: auto;
+  }
+
+  .gallery-img,
+  .gallery-img:nth-child(n){
+    grid-column: auto;
+    grid-row: auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+
+  .who-we-are-section{
+    min-height: auto;
+    padding-bottom: 64px;
+  }
+
+  .who-image-wrap,
+  .about-image img{
+    position: relative;
+    top: auto;
+    width: 100%;
+    height: min(78vw, 340px);
+    min-height: 250px;
+  }
+
+  .about-copy p,
+  .contact-intro p,
+  .configurator-heading p:not(.eyebrow){
+    max-width: 100%;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .configurator-heading{
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .configurator-launch-actions{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .config-group,
+  .preview-sticky,
+  .contact-form{
+    padding: 20px;
+  }
+
+  .choice-grid-products,
+  .choice-grid-rooms,
+  .choice-grid,
+  .finish-grid,
+  .extras-grid{
+    grid-template-columns: 1fr;
+  }
+
+  .choice-pill,
+  .finish-swatch,
+  .extra-check{
+    min-height: 44px;
+    font-size: 13px;
+  }
+
+  .stepper{
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .stepper input{
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-width: 0;
+  }
+
+  .stepper button{
+    min-width: 0;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .window-stage{
+    min-height: 260px;
+  }
+
+  .estimate-panel strong{
+    font-size: 32px;
+  }
+
+  .configurator-modal{
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .configurator-dialog{
+    width: 100vw;
+    height: 100dvh;
+    max-height: none;
+    overflow-y: auto;
+  }
+
+  .configurator-modal-head{
+    align-items: center;
+    padding: 14px 16px;
+  }
+
+  .configurator-modal-head h3{
+    font-size: 22px;
+  }
+
+  .configurator-dialog .configurator-shell{
+    padding: 16px;
+  }
+
+  .contact-buttons{
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .floating-actions{
+    right: 12px;
+    bottom: 12px;
+    gap: 10px;
+  }
+
+  .floating-action{
+    width: 46px;
+    height: 46px;
+  }
+
+  .whatsapp-preview{
+    right: 10px;
+    bottom: 72px;
+    width: calc(100vw - 20px);
+  }
+
+  .site-footer{
+    padding: 30px 0;
+  }
+
+  .footer-inner{
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+@media (max-width: 420px){
+  .container,
+  .site-header .container.header-inner,
+  .hero .container.hero-inner,
+  .configurator .container,
+  .gallery-strip .container{
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .hero-roller-wall{
+    width: calc(100vw - 14px);
+    margin-right: -14px;
+    grid-auto-columns: minmax(210px, 82vw);
+  }
+
+  .hero-heading{
+    font-size: clamp(38px, 14vw, 56px);
+  }
+
+  .config-group,
+  .preview-sticky,
+  .contact-form{
+    padding: 16px;
+  }
+}
