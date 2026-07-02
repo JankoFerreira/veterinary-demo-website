@@ -1,104 +1,22 @@
 /* =================================================================
    TAILOR MADE WINDOW DECOR — SCRIPT
    Sections:
-     1. Vertical blinds loading animation
-     2. Hero roller gallery (vertical infinite loop)
-     3. Header scroll state + mobile nav toggle
-     4. Scroll reveal animations
-     5. Hero word rotator
-     6. Floating actions + WhatsApp preview
-     7. Custom cursor
-     8. Contact form (UI only, no backend)
+     1. Hero roller gallery (vertical infinite loop)
+     2. Header scroll state + mobile nav toggle
+     3. Scroll reveal animations
+     4. Hero word rotator
+     5. Floating actions + WhatsApp preview
+     6. Contact form (UI only, no backend)
 ================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  /* ===============================================================
-     1. VERTICAL BLINDS LOADING ANIMATION
-     ---------------------------------------------------------------
-     The homepage is already rendered behind the loader. We:
-       a) Build N slat <div>s inside .blind-track (covering the screen).
-       b) Stagger their opening with inline transition-delay so they
-          fan open in sequence, like real vertical blinds turning.
-       c) Once opened, slide the blind stack left and off-screen.
-       d) Remove the loader from the DOM and unlock page scroll.
-     All durations here are mirrored in styles.css transitions —
-     keep them in sync if you change timing.
-  =============================================================== */
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const smallScreen = window.matchMedia('(max-width: 760px)').matches;
-  const SLAT_COUNT = 8;           // visible intro without the old startup jank
-  const OPEN_DURATION_MS = 780;   // matches .slat-blade transition duration in CSS
-  const OPEN_DELAY_MAX_MS = 180;  // largest per-blade delay set below
-  const HOLD_AFTER_OPEN_MS = 120; // brief pause once open, before sliding away
-  const EXIT_DURATION_MS = 420;   // matches .blind-track exit transition duration in CSS
-  const LOADER_INTRO_MS = 260;
-
-  const loader = document.getElementById('loader');
-  const blindTrack = document.getElementById('blindTrack');
-  const body = document.body;
-
-  function finishLoader() {
-    if (loader) loader.remove();
-    body.classList.remove('is-loading');
-    checkReveals();
-  }
-
-  if (loader && blindTrack && !reduceMotion && !smallScreen) body.classList.add('is-loading');
   document.querySelectorAll('.hero .reveal').forEach((el) => el.classList.add('is-visible'));
 
-  // a) Build the slats (each is a slot with a coloured blade inside —
-  //    see styles.css for why the two-layer structure is needed)
-  if (loader && blindTrack && !reduceMotion && !smallScreen) {
-    const slatWidthPercent = 100 / SLAT_COUNT;
-    for (let i = 0; i < SLAT_COUNT; i++) {
-      const slat = document.createElement('div');
-      slat.className = 'slat';
-      slat.style.setProperty('--slat-w', `${slatWidthPercent}%`);
-      const blade = document.createElement('div');
-      blade.className = 'slat-blade';
-      const bladeNumber = i + 1;
-      const openDelay = bladeNumber % 4 === 0 ? 180 : bladeNumber % 2 === 0 ? 90 : 0;
-      blade.style.setProperty('--open-delay', `${openDelay}ms`);
-      slat.appendChild(blade);
-
-      blindTrack.appendChild(slat);
-    }
-  }
-
-  function runLoaderSequence() {
-    if (!loader || !blindTrack || reduceMotion || smallScreen) {
-      finishLoader();
-      return;
-    }
-
-    // b) Open the slats (CSS handles the actual scaleX animation)
-    requestAnimationFrame(() => {
-      blindTrack.classList.add('slats-open');
-    });
-
-    // Time to wait until the slowest slat has finished opening
-    const totalOpenTime = OPEN_DELAY_MAX_MS + OPEN_DURATION_MS;
-
-    // c) Slide the opened blind stack left once the slats are open
-    setTimeout(() => {
-      loader.classList.add('slide-left');
-    }, totalOpenTime + HOLD_AFTER_OPEN_MS);
-
-    // d) Clean up after the leftward exit finishes
-    setTimeout(() => {
-      loader.style.display = 'none';
-      body.classList.remove('is-loading');
-      checkReveals();
-    }, totalOpenTime + HOLD_AFTER_OPEN_MS + EXIT_DURATION_MS);
-  }
-
-  // Give the brand mark a quick reveal before the slats open.
-  setTimeout(runLoaderSequence, reduceMotion || smallScreen ? 0 : LOADER_INTRO_MS);
-
 
   /* ===============================================================
-     2. HERO ROLLER GALLERY — vertical infinite loop
+     1. HERO ROLLER GALLERY — vertical infinite loop
      ---------------------------------------------------------------
      The track's HTML already has one full set of images. We clone
      that set once so the track contains two identical halves, then
@@ -130,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   /* ===============================================================
-     3. HEADER SCROLL STATE + MOBILE NAV TOGGLE
+     2. HEADER SCROLL STATE + MOBILE NAV TOGGLE
   =============================================================== */
   const header = document.getElementById('siteHeader');
   const navToggle = document.getElementById('navToggle');
@@ -170,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   /* ===============================================================
-     4. SCROLL REVEAL ANIMATIONS
+     3. SCROLL REVEAL ANIMATIONS
      ---------------------------------------------------------------
      Simple IntersectionObserver-based fade/rise. Elements with the
      .reveal class start hidden (see CSS) and gain .is-visible once
@@ -189,8 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   revealEls.forEach((el) => revealObserver.observe(el));
 
-  // Fallback: if the loader sequence is delayed for any reason, make sure
-  // anything already in view gets revealed rather than staying hidden.
+  // Make sure anything already in view gets revealed immediately.
   function checkReveals() {
     revealEls.forEach((el) => {
       const rect = el.getBoundingClientRect();
@@ -713,61 +630,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!clickedPreview && !clickedOpener) closeWhatsAppPreview();
   });
   /* ===============================================================
-     7. CUSTOM CURSOR
-     ---------------------------------------------------------------
-     Desktop-only pointer treatment: a small gold dot and a soft ring
-     that expands over links, buttons and form controls.
-  =============================================================== */
-  const canUseCustomCursor = false;
-
-  if (canUseCustomCursor) {
-    const cursorDot = document.createElement('div');
-    const cursorRing = document.createElement('div');
-    cursorDot.className = 'cursor-dot';
-    cursorRing.className = 'cursor-ring';
-    document.body.append(cursorRing, cursorDot);
-
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let ringX = mouseX;
-    let ringY = mouseY;
-
-    function moveCursor() {
-      ringX += (mouseX - ringX) * 0.18;
-      ringY += (mouseY - ringY) * 0.18;
-      cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-      cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
-      requestAnimationFrame(moveCursor);
-    }
-
-    window.addEventListener('pointermove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      cursorDot.classList.add('is-visible');
-      cursorRing.classList.add('is-visible');
-    }, { passive: true });
-
-    window.addEventListener('pointerleave', () => {
-      cursorDot.classList.remove('is-visible');
-      cursorRing.classList.remove('is-visible');
-    });
-
-    document.querySelectorAll('a, button, input, textarea, select, .roller-panel, .gallery-img').forEach((el) => {
-      el.addEventListener('pointerenter', () => {
-        cursorDot.classList.add('is-active');
-        cursorRing.classList.add('is-active');
-      });
-      el.addEventListener('pointerleave', () => {
-        cursorDot.classList.remove('is-active');
-        cursorRing.classList.remove('is-active');
-      });
-    });
-
-    moveCursor();
-  }
-
-  /* ===============================================================
-     8. CONTACT FORM — UI ONLY, NO BACKEND
+     6. CONTACT FORM — UI ONLY, NO BACKEND
      ---------------------------------------------------------------
      Prevents the default page reload and shows a friendly confirmation
      message. Replace this with a real submission handler (e.g. fetch
