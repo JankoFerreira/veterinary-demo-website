@@ -5101,7 +5101,7 @@ body.configurator-open{
 }
 
 .who-slats{
-  gap: clamp(10px, 1.4vw, 18px);
+  gap: clamp(4px, 0.65vw, 8px);
 }
 
 .who-slat{
