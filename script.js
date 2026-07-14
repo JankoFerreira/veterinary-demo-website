@@ -1,27 +1,66 @@
 /* =================================================================
-   TAILOR MADE WINDOW DECOR — SCRIPT
+   HARBOR PAWS VETERINARY CLINIC — SCRIPT
    Sections:
-     1. Hero roller gallery (vertical infinite loop)
-     2. Header scroll state + mobile nav toggle
-     3. Scroll reveal animations
-     4. Hero word rotator
-     5. Floating actions + WhatsApp preview
-     6. Contact form (UI only, no backend)
+     1. Gentle clinic loading animation
+     2. Hero roller gallery (vertical infinite loop)
+     3. Header scroll state + mobile nav toggle
+     4. Scroll reveal animations
+     5. Hero word rotator
+     6. Floating actions + WhatsApp preview
+     7. Custom cursor
+     8. Contact form (UI only, no backend)
 ================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll('.hero .reveal').forEach((el) => el.classList.add('is-visible'));
+  /* ===============================================================
+     1. GENTLE CLINIC LOADING ANIMATION
+     ---------------------------------------------------------------
+     A soft paw and heartbeat intro gives the clinic a warmer first
+     impression before fading into the page.
+  =============================================================== */
+  const smallScreen = window.matchMedia('(max-width: 760px)').matches;
+  const LOADER_HOLD_MS = 1450;
+  const LOADER_EXIT_MS = 720;
+
+  const loader = document.getElementById('loader');
+  const loaderCareMark = document.getElementById('loaderCareMark');
+  const body = document.body;
+
+  function finishLoader() {
+    if (loader) loader.remove();
+    body.classList.remove('is-loading');
+    checkReveals();
+  }
+
+  if (loader && !reduceMotion && !smallScreen) body.classList.add('is-loading');
+
+  function runLoaderSequence() {
+    if (!loader || reduceMotion || smallScreen) {
+      finishLoader();
+      return;
+    }
+
+    if (loaderCareMark) loaderCareMark.classList.add('is-ready');
+
+    setTimeout(() => {
+      loader.classList.add('care-complete');
+    }, LOADER_HOLD_MS);
+
+    setTimeout(() => {
+      finishLoader();
+    }, LOADER_HOLD_MS + LOADER_EXIT_MS);
+  }
+
+  setTimeout(runLoaderSequence, reduceMotion || smallScreen ? 0 : 180);
 
 
   /* ===============================================================
-     1. HERO ROLLER GALLERY — vertical infinite loop
+     2. HERO ROLLER GALLERY — vertical infinite loop
      ---------------------------------------------------------------
-     The track's HTML already has one full set of images. We clone
-     that set once so the track contains two identical halves, then
-     let the CSS animation (rollerLoop) scroll the track up by exactly
-     50% of its height, looping seamlessly back to 0%.
+     Each care panel can hold one or more images. When a panel has multiple images, we clone them for a seamless vertical loop; single-image panels stay still.
   =============================================================== */
   const rollerTracks = document.querySelectorAll('.roller-blade-track');
   let rollerStarted = false;
@@ -48,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   /* ===============================================================
-     2. HEADER SCROLL STATE + MOBILE NAV TOGGLE
+     3. HEADER SCROLL STATE + MOBILE NAV TOGGLE
   =============================================================== */
   const header = document.getElementById('siteHeader');
   const navToggle = document.getElementById('navToggle');
@@ -88,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   /* ===============================================================
-     3. SCROLL REVEAL ANIMATIONS
+     4. SCROLL REVEAL ANIMATIONS
      ---------------------------------------------------------------
      Simple IntersectionObserver-based fade/rise. Elements with the
      .reveal class start hidden (see CSS) and gain .is-visible once
@@ -107,7 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   revealEls.forEach((el) => revealObserver.observe(el));
 
-  // Make sure anything already in view gets revealed immediately.
+  // Fallback: if the loader sequence is delayed for any reason, make sure
+  // anything already in view gets revealed rather than staying hidden.
   function checkReveals() {
     revealEls.forEach((el) => {
       const rect = el.getBoundingClientRect();
@@ -132,11 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
   scheduleRevealCheck();
 
   /* ===============================================================
-     5. WHO WE ARE IMAGE - posh sticky slat scroll reveal
+     5. WHO WE ARE IMAGE - gentle care-card scroll reveal
      ---------------------------------------------------------------
-     Five image strips slide into a calm finished composition while the
-     sticky stage gently brightens. The strips use the same local image
-     and aligned background positions for a premium editorial reveal.
+     Soft care cards settle into one calm clinic image while the sticky stage brightens.
   =============================================================== */
   const whoSection = document.querySelector('.who-we-are-section');
   const whoImageWrap = document.querySelector('[data-who-image]');
@@ -247,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ===============================================================
      6. HERO WORD ROTATOR
      ---------------------------------------------------------------
-     Cycles the main hero service word with a blind-like vertical reveal.
+     Cycles the main hero service word with a soft vertical reveal.
   =============================================================== */
   const heroWords = Array.from(document.querySelectorAll('.hero-word'));
   let activeHeroWord = 0;
@@ -275,44 +313,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (configurator) {
     const productData = {
-      roller: { label: 'Roller Blind', rate: 1450 },
-      venetian: { label: 'Venetian Blind', rate: 1800 },
-      vertical: { label: 'Vertical Blind', rate: 1300 },
-      roman: { label: 'Roman Blind', rate: 2200 },
-      sheer: { label: 'Sheer Curtain', rate: 1850 },
-      blockout: { label: 'Blockout Curtain', rate: 2300 },
-      zebra: { label: 'Zebra Blind', rate: 2100 }
+      wellness: { label: 'Wellness Exam', rate: 650 },
+      vaccines: { label: 'Vaccines', rate: 520 },
+      dental: { label: 'Dental Check', rate: 850 },
+      diagnostics: { label: 'Diagnostics', rate: 950 },
+      skin: { label: 'Skin / Ear Issue', rate: 720 },
+      surgery: { label: 'Surgery Consult', rate: 780 },
+      urgent: { label: 'Same-Day Concern', rate: 900 }
     };
 
     const roomData = {
-      living: 'Living Room',
-      bedroom: 'Bedroom',
-      kitchen: 'Kitchen',
-      office: 'Office',
-      patio: 'Patio'
+      dog: 'Dog',
+      cat: 'Cat',
+      puppy: 'Puppy',
+      kitten: 'Kitten',
+      senior: 'Senior Pet'
     };
 
     const finishData = {
-      linen: { label: 'Warm Linen', multiplier: 1, color: '#d8c2a0', shadow: 'rgba(91, 70, 54, 0.24)' },
-      oat: { label: 'Soft Oat', multiplier: 1.08, color: '#ece3d2', shadow: 'rgba(91, 70, 54, 0.18)' },
-      walnut: { label: 'Walnut', multiplier: 1.18, color: '#7a5237', shadow: 'rgba(43, 38, 32, 0.36)' },
-      charcoal: { label: 'Charcoal', multiplier: 1.16, color: '#34302b', shadow: 'rgba(43, 38, 32, 0.44)' }
+      morning: { label: 'Morning', multiplier: 1, color: '#79c7bd', shadow: 'rgba(41, 111, 102, 0.22)' },
+      midday: { label: 'Midday', multiplier: 1, color: '#a8d8b9', shadow: 'rgba(52, 120, 78, 0.18)' },
+      afternoon: { label: 'Afternoon', multiplier: 1, color: '#e7b36b', shadow: 'rgba(139, 91, 34, 0.24)' },
+      soonest: { label: 'Soonest', multiplier: 1.08, color: '#4f7f95', shadow: 'rgba(36, 74, 91, 0.28)' }
     };
 
     const extrasData = {
-      installation: { label: 'Professional installation', fixed: 850, areaRate: 160 },
-      lining: { label: 'Blockout lining', percent: 0.18 },
-      motorisation: { label: 'Motorisation', fixed: 1850 },
-      rail: { label: 'Curtain rail/track', fixed: 650, areaRate: 80 },
-      safety: { label: 'Child safety chain', fixed: 180 }
+      nervous: { label: 'Nervous pet', fixed: 0 },
+      new: { label: 'New patient', fixed: 0 },
+      medication: { label: 'Currently on medication', fixed: 0 },
+      records: { label: 'Need records transferred', fixed: 0 },
+      multi: { label: 'More than one pet', fixed: 180 }
     };
 
     const configState = {
-      product: 'roller',
-      room: 'living',
-      width: 1200,
-      height: 1200,
-      finish: 'linen',
+      product: 'wellness',
+      room: 'dog',
+      width: 12,
+      height: 5,
+      finish: 'morning',
       extras: []
     };
 
@@ -384,14 +422,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getArea() {
-      return Math.max(1, (configState.width / 1000) * (configState.height / 1000));
+      return Math.max(1, configState.width);
     }
 
     function calculateEstimate() {
       const area = getArea();
       const product = productData[configState.product];
       const finish = finishData[configState.finish];
-      let subtotal = area * product.rate * finish.multiplier;
+      let subtotal = product.rate * finish.multiplier + Math.max(0, configState.width - 10) * 8;
 
       configState.extras.forEach((extraKey) => {
         const extra = extrasData[extraKey];
@@ -428,9 +466,8 @@ document.addEventListener('DOMContentLoaded', () => {
         design: {
           product: productData[configState.product].label,
           room: roomData[configState.room],
-          widthMm: configState.width,
-          heightMm: configState.height,
-          areaSqm: Number(pricing.area.toFixed(2)),
+          weightKg: Number(configState.width.toFixed(1)),
+          ageYears: Number(configState.height.toFixed(1)),
           finish: finishData[configState.finish].label,
           extras: selectedExtraLabels()
         },
@@ -445,7 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function syncMeasurementInput(input, key, min, max) {
       const parsed = Number(input.value);
-      const nextValue = Number.isFinite(parsed) ? cfgClamp(Math.round(parsed), min, max) : configState[key];
+      const nextValue = Number.isFinite(parsed) ? cfgClamp(Math.round(parsed * 2) / 2, min, max) : configState[key];
       configState[key] = nextValue;
       input.value = String(nextValue);
       updateConfigurator();
@@ -457,20 +494,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const finish = finishData[configState.finish];
       const pricing = calculateEstimate();
       const extraLabels = selectedExtraLabels();
-      const widthScale = cfgClamp((configState.width - 400) / 4600, 0, 1);
-      const heightScale = cfgClamp((configState.height - 400) / 3600, 0, 1);
-      const productWidthBonus = ['sheer', 'blockout'].includes(configState.product) ? 8 : 0;
+      const widthScale = cfgClamp((configState.width - 1) / 79, 0, 1);
+      const heightScale = cfgClamp(configState.height / 25, 0, 1);
+      const productWidthBonus = ['urgent', 'diagnostics'].includes(configState.product) ? 8 : 0;
 
       document.getElementById('configProductLabel').textContent = product.label;
       document.getElementById('configRoomLabel').textContent = room;
       document.getElementById('configFinishLabel').textContent = finish.label;
-      document.getElementById('configAreaLabel').textContent = pricing.area.toFixed(2) + 'm' + String.fromCharCode(178);
+      document.getElementById('configAreaLabel').textContent = configState.width.toFixed(1).replace('.0', '') + ' kg / ' + configState.height.toFixed(1).replace('.0', '') + ' yrs';
       document.getElementById('configExtrasLabel').textContent = extraLabels.length ? extraLabels.length + ' selected' : 'None selected';
       document.getElementById('estimateRange').textContent = formatRand(pricing.low) + ' - ' + formatRand(pricing.high);
-      document.getElementById('estimateSummary').textContent = product.label + ' for a ' + room + ', ' + configState.width + 'mm x ' + configState.height + 'mm in ' + finish.label + (extraLabels.length ? ' with ' + extraLabels.join(', ') + '.' : '.');
+      document.getElementById('estimateSummary').textContent = product.label + ' for a ' + room + ', approximately ' + configState.width.toFixed(1).replace('.0', '') + ' kg and ' + configState.height.toFixed(1).replace('.0', '') + ' years old. Preferred time: ' + finish.label + (extraLabels.length ? '. Notes: ' + extraLabels.join(', ') + '.' : '.');
       const summaryStrip = document.getElementById('configSummaryStrip');
       if (summaryStrip) {
-        summaryStrip.textContent = product.label + ' / ' + room + ' / ' + configState.width + ' x ' + configState.height + 'mm / ' + finish.label;
+        summaryStrip.textContent = product.label + ' / ' + room + ' / ' + configState.width.toFixed(1).replace('.0', '') + ' kg / ' + configState.height.toFixed(1).replace('.0', '') + ' yrs / ' + finish.label;
       }
 
       if (widthInput.value !== String(configState.width)) widthInput.value = String(configState.width);
@@ -517,8 +554,8 @@ document.addEventListener('DOMContentLoaded', () => {
     configurator.querySelectorAll('[data-measure-control]').forEach((control) => {
       const key = control.dataset.measureControl;
       const input = key === 'width' ? widthInput : heightInput;
-      const min = key === 'width' ? 400 : 400;
-      const max = key === 'width' ? 5000 : 4000;
+      const min = key === 'width' ? 1 : 0;
+      const max = key === 'width' ? 80 : 25;
 
       control.querySelectorAll('[data-step]').forEach((button) => {
         button.addEventListener('click', () => {
@@ -534,7 +571,7 @@ document.addEventListener('DOMContentLoaded', () => {
       input.addEventListener('input', () => {
         const parsed = Number(input.value);
         if (!Number.isFinite(parsed) || parsed < min || parsed > max) return;
-        configState[key] = Math.round(parsed);
+        configState[key] = Math.round(parsed * 2) / 2;
         updateConfigurator();
       });
     });
@@ -544,15 +581,15 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         if (!leadForm.checkValidity()) {
-          quoteSuccess.textContent = 'Please complete the required details so we can send your estimate.';
+          quoteSuccess.textContent = 'Please complete the required details so we can request your appointment.';
           quoteSuccess.classList.remove('is-success');
           leadForm.reportValidity();
           return;
         }
 
         const enquiry = buildEnquiry(new FormData(leadForm));
-        console.log('Configurator quote enquiry', enquiry);
-        quoteSuccess.textContent = 'Thank you. Your design and estimate have been prepared, and we will be in touch shortly.';
+        console.log('Appointment request enquiry', enquiry);
+        quoteSuccess.textContent = 'Thank you. Your appointment request has been prepared, and we will be in touch shortly to confirm a time.';
         quoteSuccess.classList.add('is-success');
         leadForm.reset();
       });
@@ -630,7 +667,61 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!clickedPreview && !clickedOpener) closeWhatsAppPreview();
   });
   /* ===============================================================
-     6. CONTACT FORM — UI ONLY, NO BACKEND
+     7. CUSTOM CURSOR
+     ---------------------------------------------------------------
+     Desktop-only pointer treatment: a small gold dot and a soft ring
+     that expands over links, buttons and form controls.
+  =============================================================== */
+  const canUseCustomCursor = window.matchMedia('(pointer: fine)').matches && !reduceMotion;
+
+  if (canUseCustomCursor) {
+    const cursorDot = document.createElement('div');
+    const cursorRing = document.createElement('div');
+    cursorDot.className = 'cursor-dot';
+    cursorRing.className = 'cursor-ring';
+    document.body.append(cursorRing, cursorDot);
+    document.body.classList.add('has-custom-cursor');
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
+
+    function moveCursor() {
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+      cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+      requestAnimationFrame(moveCursor);
+    }
+
+    window.addEventListener('pointermove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursorDot.classList.add('is-visible');
+      cursorRing.classList.add('is-visible');
+    }, { passive: true });
+
+    window.addEventListener('pointerleave', () => {
+      cursorDot.classList.remove('is-visible');
+      cursorRing.classList.remove('is-visible');
+    });
+
+    document.querySelectorAll('a, button, input, textarea, select, .roller-panel, .gallery-img').forEach((el) => {
+      el.addEventListener('pointerenter', () => {
+        cursorDot.classList.add('is-active');
+        cursorRing.classList.add('is-active');
+      });
+      el.addEventListener('pointerleave', () => {
+        cursorDot.classList.remove('is-active');
+        cursorRing.classList.remove('is-active');
+      });
+    });
+
+    moveCursor();
+  }
+  /* ===============================================================
+     8. CONTACT FORM — UI ONLY, NO BACKEND
      ---------------------------------------------------------------
      Prevents the default page reload and shows a friendly confirmation
      message. Replace this with a real submission handler (e.g. fetch
